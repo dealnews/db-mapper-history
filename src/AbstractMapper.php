@@ -43,9 +43,15 @@ abstract class AbstractMapper extends \DealNews\DB\AbstractMapper {
         $id = $this->getValue($object, $this::PRIMARY_KEY, $this::MAPPING[$this::PRIMARY_KEY]);
         if (!empty($id)) {
             $current = $this->load($id);
-        } else {
+        }
+
+        // This is either because $id was empty or because this is a creation where
+        // the id was set, and it is not relying on an autoincrement id. If there
+        // was an actual DB issue, an exception would have been thrown by the load call.
+        if(empty($current)) {
             $current = new ($this::MAPPED_CLASS)();
         }
+
         $object = parent::save($object);
         $this->saveHistory($object, $current);
 
@@ -113,6 +119,7 @@ abstract class AbstractMapper extends \DealNews\DB\AbstractMapper {
                 'object'      => json_encode($changes),
                 'status'      => $status,
                 'user'        => $this->getUser(),
+                'modified'    => date('Y-m-d H:i:s'),
             ]
         );
     }
