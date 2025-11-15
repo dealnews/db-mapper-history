@@ -106,7 +106,7 @@ abstract class AbstractMapper extends \DealNews\DB\AbstractMapper {
         }
 
         $this->history_crud->create(
-            $this::REVISION_HISTORY_TABLE_NAME,
+            $this->getHistoryTableName(),
             [
                 'object_id'   => $object_id,
                 'object_type' => empty($this::REVISION_HISTORY_NAME) ? $this::MAPPED_CLASS : $this::REVISION_HISTORY_NAME,
@@ -143,5 +143,14 @@ abstract class AbstractMapper extends \DealNews\DB\AbstractMapper {
      */
     protected function getUser(): string {
         return 'unknown';
+    }
+
+    /**
+     * Override this method to customize the table name at runtime
+     *
+     * @return string
+     */
+    protected function getHistoryTableName(): string {
+        return $this::REVISION_HISTORY_TABLE_NAME;
     }
 }
