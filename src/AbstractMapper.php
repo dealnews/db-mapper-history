@@ -111,17 +111,20 @@ abstract class AbstractMapper extends \DealNews\DB\AbstractMapper {
             $changes    = $this->generateDiff($object, $current);
         }
 
-        $this->history_crud->create(
-            $this->getHistoryTableName(),
-            [
-                'object_id'   => $object_id,
-                'object_type' => empty($this::REVISION_HISTORY_NAME) ? $this::MAPPED_CLASS : $this::REVISION_HISTORY_NAME,
-                'object'      => json_encode($changes),
-                'status'      => $status,
-                'user'        => $this->getUser(),
-                'modified'    => date('Y-m-d H:i:s'),
-            ]
-        );
+        // only write history when changes actually happen
+        if(!empty($changes['added']) || !empty($changes['removed']) ) {
+            $this->history_crud->create(
+                $this->getHistoryTableName(),
+                [
+                    'object_id'   => $object_id,
+                    'object_type' => empty($this::REVISION_HISTORY_NAME) ? $this::MAPPED_CLASS : $this::REVISION_HISTORY_NAME,
+                    'object'      => json_encode($changes),
+                    'status'      => $status,
+                    'user'        => $this->getUser(),
+                    'modified'    => date('Y-m-d H:i:s'),
+                ]
+            );
+        }
     }
 
     /**
