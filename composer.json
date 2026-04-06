@@ -10,7 +10,7 @@
     },
     "require": {
         "php": "^8.2",
-        "dealnews/db": "^4.0",
+        "dealnews/db": "^4.1",
         "sarhan/php-flatten": "^4.0"
     },
     "require-dev": {
